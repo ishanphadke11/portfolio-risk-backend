@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: portfolio-risk-model
+  datasource:
+    url: jdbc:postgresql://localhost:5432/portfolio-risk
+    username: portfolio
+    password: changemelater
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true

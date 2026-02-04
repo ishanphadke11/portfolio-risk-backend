@@ -1,10 +1,14 @@
 package com.ishan.portfolio_risk_model.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "holdings", uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "ticker"}),
 indexes = @Index(name = "idx_holdings_user", columnList = "user_id"))
 public class HoldingsEntity {

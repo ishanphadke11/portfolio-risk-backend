@@ -18,6 +18,7 @@ Your goal is to act as a senior Spring Boot developer who understands:
 - Do NOT rename existing entities unless explicitly requested
 - Do NOT modify configuration files (like application.yaml) unless told
 - Do NOT add Lombok unless explicitly requested
+- Do NOT make any code changes before checking with me
 
 ## Testing
 - Prefer JUnit 5
@@ -28,4 +29,9 @@ Your goal is to act as a senior Spring Boot developer who understands:
 - Show diffs or file-level changes when modifying code
 - Briefly explain the reasoning behind changes
 - Suggest improvements only when safe and relevant
+
+## Workflow
+- Only SUGGEST changes; do NOT implement them directly
+- The user will manually implement suggested changes
+- Only write/edit code when the user explicitly asks to implement
 

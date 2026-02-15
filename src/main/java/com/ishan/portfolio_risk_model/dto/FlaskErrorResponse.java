@@ -5,16 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
-
-// response body for holding data
+// response body for error returned by the flaks service
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
 @Setter
-public class HoldingsResponse {
-
-    private Long id;
-    private String ticker;
-    private BigDecimal quantity;
+@Getter
+public class FlaskErrorResponse {
+    private String error;
+    private String code;
 }

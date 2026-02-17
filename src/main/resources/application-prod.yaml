@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    username: ${DB_USERNAME}
+    url: ${DATABASE_URL}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  security:
+    debug:false
+flask:
+  service:
+    base-url: ${FLASK_SERVICE_URL}

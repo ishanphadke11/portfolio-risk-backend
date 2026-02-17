@@ -1,21 +1,21 @@
 server:
   port: ${PORT:8080}
 
-  spring:
-    datasource:
-      url: ${DATABASE_URL}
-      username: ${DB_USERNAME}
-      password: ${DB_PASSWORD}
-      hikari:
-        maximum-pool-size: 5
-    jpa:
-      database-platform: org.hibernate.dialect.PostgreSQLDialect
-      hibernate:
-        ddl-auto: update
-      show-sql: false
-    security:
-      debug: false
+spring:
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 5
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+    ddl-auto: update
+    show-sql: false
+  security:
+    debug: false
 
-  flask:
-    service:
-      base-url: ${FLASK_SERVICE_URL}
+flask:
+  service:
+  base-url: ${FLASK_SERVICE_URL}

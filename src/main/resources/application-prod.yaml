@@ -11,11 +11,11 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-    ddl-auto: update
+      ddl-auto: update
     show-sql: false
   security:
     debug: false
 
 flask:
   service:
-  base-url: ${FLASK_SERVICE_URL}
+    base-url: ${FLASK_SERVICE_URL}

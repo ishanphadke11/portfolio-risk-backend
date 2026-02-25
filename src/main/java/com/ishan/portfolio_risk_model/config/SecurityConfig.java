@@ -15,6 +15,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -34,6 +39,9 @@ public class SecurityConfig {
         http
                 // Disable CSRF - not needed for stateless JWT auth
                 .csrf(csrf -> csrf.disable())
+
+                // Enable CORS using our corsConfigurationSource() bean below
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
                 // Configure endpoint authorization
                 .authorizeHttpRequests(auth -> auth
@@ -82,5 +90,34 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
+    }
+
+    /**
+     * CORS configuration — defines which frontend origins are allowed to call this API.
+     * Without this, browsers block cross-origin requests from the React frontend.
+     */
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+
+        // Allow requests from local development and any deployed frontend URL
+        config.setAllowedOrigins(List.of(
+            "http://localhost:3000",
+            "http://localhost:5173"
+        ));
+
+        // Allow these HTTP methods
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        // Allow these headers — Authorization is required for JWT, Content-Type for JSON bodies
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+
+        // Allow the browser to send cookies and auth headers cross-origin
+        config.setAllowCredentials(true);
+
+        // Apply this CORS config to every endpoint in the app
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 }

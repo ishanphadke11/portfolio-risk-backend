@@ -2,7 +2,6 @@ package com.ishan.portfolio_risk_model.service;
 
 import com.ishan.portfolio_risk_model.dto.FlaskAnalysisRequest;
 import com.ishan.portfolio_risk_model.dto.FlaskAnalysisResponse;
-import com.ishan.portfolio_risk_model.dto.FlaskErrorResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,9 +27,11 @@ public class FlaskClient {
                             return clientResponse.bodyTo(FlaskAnalysisResponse.class);
                         }
 
-                        FlaskErrorResponse errorResponse = clientResponse.bodyTo(FlaskErrorResponse.class);
-                        String errorMessage = (errorResponse != null && errorResponse.getError() != null)
-                                ? errorResponse.getError()
+                        // Read the error body as a plain String — Flask may return
+                        // text/plain or application/json, so String handles both safely
+                        String rawBody = clientResponse.bodyTo(String.class);
+                        String errorMessage = (rawBody != null && !rawBody.isBlank())
+                                ? rawBody
                                 : "Flask service returned status " + clientResponse.getStatusCode();
 
                         HttpStatus status = mapFlaskStatus(clientResponse.getStatusCode().value());

@@ -1,6 +1,5 @@
 package com.ishan.portfolio_risk_model.security;
 
-import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -48,7 +47,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String userEmail;
         try {
             userEmail = jwtService.extractEmail(token);
-        } catch (JwtException e) {
+        } catch (Exception e) {
+            // any exception during token parsing (expired, malformed, bad key, etc.)
+            // means we treat the request as unauthenticated and let Spring Security decide
             filterChain.doFilter(request, response);
             return;
         }

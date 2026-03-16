@@ -51,6 +51,7 @@ public class FlaskClient {
         return switch (flaskStatus) {
             case 400 -> HttpStatus.BAD_REQUEST;
             case 404 -> HttpStatus.NOT_FOUND;
+            case 429 -> HttpStatus.TOO_MANY_REQUESTS;
             default -> HttpStatus.BAD_GATEWAY;
         };
     }

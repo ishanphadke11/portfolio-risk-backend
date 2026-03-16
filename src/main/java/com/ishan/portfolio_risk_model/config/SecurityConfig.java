@@ -1,6 +1,5 @@
 package com.ishan.portfolio_risk_model.config;
 
-import com.ishan.portfolio_risk_model.security.DevAuthFilter;
 import com.ishan.portfolio_risk_model.security.JwtAuthenticationFilter;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +15,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -32,10 +30,6 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserDetailsService userDetailsService;
     private final String frontendUrl;
-
-    // TODO: REMOVE — inject DevAuthFilter only while auth bypass is active
-    @Autowired(required = false)
-    private DevAuthFilter devAuthFilter;
 
     public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
                           UserDetailsService userDetailsService,
@@ -55,10 +49,10 @@ public class SecurityConfig {
                 // Enable CORS using our corsConfigurationSource() bean below
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
-                // TODO: REMOVE — permit all requests while auth is disabled for dev
-                // Restore to: .requestMatchers("/api/v1/auth/**").permitAll() + .anyRequest().authenticated()
+                // Auth endpoints are public; everything else requires a valid JWT
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
+                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        .anyRequest().authenticated()
                 )
 
                 // Return 401 JSON for unauthenticated requests (instead of Spring Security's default 403)
@@ -78,18 +72,13 @@ public class SecurityConfig {
                 // Set our custom authentication provider
                 .authenticationProvider(authenticationProvider())
 
-                // JWT filter runs first, then DevAuthFilter fills in the test user if no token was found
+                // JWT filter runs before the standard username/password filter
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
-        // TODO: REMOVE — register DevAuthFilter after JWT filter (dev only, not present in prod)
-        if (devAuthFilter != null) {
-            http.addFilterAfter(devAuthFilter, JwtAuthenticationFilter.class);
-        }
 
         return http.build();
     }
 
-    // password encoder using BCrypt
+    // Password encoder using BCrypt
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

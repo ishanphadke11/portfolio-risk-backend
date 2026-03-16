@@ -1,5 +1,6 @@
 package com.ishan.portfolio_risk_model.security;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,8 +43,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // extract the token (remove bearer prefix)
         final String token = authHeader.substring(7);
-        // extract email
-        final String userEmail = jwtService.extractEmail(token);
+
+        // extract email — if the token is expired or malformed, skip authentication
+        final String userEmail;
+        try {
+            userEmail = jwtService.extractEmail(token);
+        } catch (JwtException e) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         // if we have an email AND user is not already authenticated
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {

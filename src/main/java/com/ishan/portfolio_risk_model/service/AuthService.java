@@ -25,7 +25,7 @@ public class AuthService {
     public AuthResponse register(RegisterRequest registerRequest) {
         // check if email already exists
         if (userRepository.existsByEmail(registerRequest.getEmail())) {
-            throw new IllegalArgumentException("Email already exists");
+            throw new IllegalArgumentException("Email already registered");
         }
 
         // create new user entity

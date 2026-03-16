@@ -1,6 +1,7 @@
 package com.ishan.portfolio_risk_model.config;
 
 import com.ishan.portfolio_risk_model.security.JwtAuthenticationFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -51,6 +52,15 @@ public class SecurityConfig {
 
                         // All other endpoints require authentication
                         .anyRequest().authenticated()
+                )
+
+                // Return 401 JSON for unauthenticated requests (instead of Spring Security's default 403)
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"error\": \"Unauthorized\"}");
+                        })
                 )
 
                 // Use stateless sessions - no session cookies

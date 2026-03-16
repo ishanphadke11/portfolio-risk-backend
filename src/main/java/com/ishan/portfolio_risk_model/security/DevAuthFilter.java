@@ -6,7 +6,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,8 +22,8 @@ import java.io.IOException;
  *
  * Remove this filter (and revert SecurityConfig) once auth is working correctly.
  */
+// TODO: REMOVE — delete @Profile restriction once auth is fully disabled in all envs
 @Component
-@Profile("!prod")
 public class DevAuthFilter extends OncePerRequestFilter {
 
     static final String DEV_USER_EMAIL = "test@factorlens.com";

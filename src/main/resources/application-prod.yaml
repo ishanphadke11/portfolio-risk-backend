@@ -24,4 +24,4 @@ flask:
     base-url: ${FLASK_SERVICE_URL}
 
 frontend:
-  url: ${FRONTEND_URL:http://localhost:3000}
+  url: ${FRONTEND_URL:https://portfolio-analysis-frontend.vercel.app}

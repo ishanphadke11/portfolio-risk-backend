@@ -22,12 +22,11 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) {
         String testEmail = "test@factorlens.com";
 
-        if (!userRepository.existsByEmail(testEmail)) {
-            UserEntity user = new UserEntity();
-            user.setEmail(testEmail);
-            user.setPasswordHash(passwordEncoder.encode("Test1234!"));
-            user.setRole(UserEntity.Role.USER);
-            userRepository.save(user);
-        }
+        // always upsert so credentials are always known
+        UserEntity user = userRepository.findByEmail(testEmail).orElseGet(UserEntity::new);
+        user.setEmail(testEmail);
+        user.setPasswordHash(passwordEncoder.encode("Test1234!"));
+        user.setRole(UserEntity.Role.USER);
+        userRepository.save(user);
     }
 }
